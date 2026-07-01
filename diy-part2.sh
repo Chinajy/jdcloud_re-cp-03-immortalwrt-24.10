@@ -41,15 +41,21 @@ sed -i 's/ImmortalWrt/Baili-2.4G/g' package/mtk/applications/mtwifi-cfg/files/mt
 sed -i 's/ImmortalWrt_5G/Baili-5G/g' package/mtk/applications/mtwifi-cfg/files/mtwifi.sh 2>/dev/null || true
 echo "=== Step 3 completed: WiFi SSID configured ==="
 
-# ============ 4. 固件版本标识 ============
-echo "=== Step 4: Setting firmware version banner ==="
+# ============ 4. 禁用冲突的USB挂载包 ============
+echo "=== Step 4: Removing conflicting mount packages ==="
+# 物理删除 automount 防止被依赖拉入
+rm -rf package/emortal/automount 2>/dev/null || true
+rm -rf feeds/packages/utils/automount 2>/dev/null || true
+rm -rf feeds/packages/utils/ntfs3-mount 2>/dev/null || true
+echo "=== Step 4 completed: automount / ntfs3-mount removed ==="
+
+# ============ 5. 固件版本标识 ============
+echo "=== Step 5: Setting firmware version banner ==="
 BUILD_DATE=$(date +"%Y%m%d")
 sed -i "/DISTRIB_DESCRIPTION/d" package/base-files/files/etc/openwrt_release
 echo "DISTRIB_DESCRIPTION='ImmortalWrt 24.10 for Baili AX6000 (Build ${BUILD_DATE})'" >> package/base-files/files/etc/openwrt_release
-echo "=== Step 4 completed ==="
+echo "=== Step 5 completed ==="
 
-
-echo "=== Step 6 completed ==="
 
 echo ""
 echo "============================================"
