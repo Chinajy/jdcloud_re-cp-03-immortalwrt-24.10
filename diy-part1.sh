@@ -41,3 +41,6 @@ git clone https://github.com/EasyTier/luci-app-easytier.git package/luci-app-eas
 # 7. Argon主题
 git clone https://github.com/jerrykuku/luci-theme-argon.git package/luci-theme-argon
 git clone https://github.com/jerrykuku/luci-app-argon-config.git package/luci-app-argon-config
+
+# 8. TailScale
+git clone https://github.com/Tokisaki-Galaxy/luci-app-tailscale-community package/luci-app-tailscale-community
