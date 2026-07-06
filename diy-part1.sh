@@ -44,3 +44,6 @@ git clone https://github.com/jerrykuku/luci-app-argon-config.git package/luci-ap
 
 # 8. TailScale
 git clone https://github.com/Tokisaki-Galaxy/luci-app-tailscale-community package/luci-app-tailscale-community
+
+# 9. WOLPLUS
+git clone https://github.com/Chinajy/luci-app-wolplus package/luci-app-wolplus
