@@ -56,7 +56,13 @@ sed -i "/DISTRIB_DESCRIPTION/d" package/base-files/files/etc/openwrt_release
 echo "DISTRIB_DESCRIPTION='ImmortalWrt 24.10 for Baili AX6000 (Build ${BUILD_DATE})'" >> package/base-files/files/etc/openwrt_release
 echo "=== Step 5 completed ==="
 
-# ============ 6. 修复登录提示符PS1乱码，永久固定 root@主机名:路径# ============
+# ============ 6. 修改SSH/串口登录横幅文字 ============
+echo "=== Step 6: Modify login banner text ==="
+sed -i 's/ImmortalWrt-798x-24.10 from PadavanOnly/ImmortalWrt 24.10 for Baili AX6000/g' package/base-files/files/etc/banner
+echo "=== Step 6 completed ==="
+
+
+# ============ 7. 修复登录提示符PS1乱码，永久固定 root@主机名:路径# ============
 echo "=== Step 6: Fix login PS1 prompt ==="
 sed -i '/export PS1=/d' package/base-files/files/etc/profile
 echo 'export PS1="\u@\h:\w# "' >> package/base-files/files/etc/profile
