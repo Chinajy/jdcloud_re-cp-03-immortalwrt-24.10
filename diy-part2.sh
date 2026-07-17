@@ -21,12 +21,25 @@
 
 # ============ 1. OpenClash Meta内核下载 ============
 echo "=== Step 1: Downloading OpenClash Meta core for arm64 ==="
-mkdir -p feeds/luci/applications/luci-app-openclash/root/etc/openclash/core
-curl -sL -m 30 --retry 2 https://raw.githubusercontent.com/vernesong/OpenClash/core/master/meta/clash-linux-arm64.tar.gz -o /tmp/clash.tar.gz
-tar zxvf /tmp/clash.tar.gz -C /tmp >/dev/null 2>&1
-chmod +x /tmp/clash >/dev/null 2>&1
-mv /tmp/clash feeds/luci/applications/luci-app-openclash/root/etc/openclash/core/clash_meta >/dev/null 2>&1
-rm -rf /tmp/clash.tar.gz >/dev/null 2>&1
+CORE_TARGET_DIR="feeds/luci/applications/luci-app-openclash/root/etc/openclash/core"
+mkdir -p "$CORE_TARGET_DIR" 2>/dev/null
+
+# 国内镜像下载，静默输出，失败不中断流程
+curl -sL -m 60 --retry 3 https://mirror.ghproxy.com/https://raw.githubusercontent.com/vernesong/OpenClash/core/master/meta/clash-linux-arm64.tar.gz -o /tmp/clash.tar.gz 2>/dev/null
+
+# 判断压缩包存在再解压
+if [ -f "/tmp/clash.tar.gz" ]; then
+    tar zxvf /tmp/clash.tar.gz -C /tmp >/dev/null 2>&1
+    # 匹配/tmp下文件名包含clash的二进制文件
+    BIN_FILE=$(find /tmp -maxdepth 1 -type f -name "*clash*")
+    if [ -n "$BIN_FILE" ]; then
+        chmod +x "$BIN_FILE" >/dev/null 2>&1
+        mv "$BIN_FILE" "$CORE_TARGET_DIR/clash_meta" >/dev/null 2>&1
+    fi
+fi
+
+# 清理临时文件
+rm -rf /tmp/clash.tar.gz 2>/dev/null
 echo "=== Step 1 completed: OpenClash Meta core ready ==="
 
 # ============ 2. MT7986A CPU频率设置为2.0GHz ============
