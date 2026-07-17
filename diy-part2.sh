@@ -56,6 +56,13 @@ sed -i "/DISTRIB_DESCRIPTION/d" package/base-files/files/etc/openwrt_release
 echo "DISTRIB_DESCRIPTION='ImmortalWrt 24.10 for Baili AX6000 (Build ${BUILD_DATE})'" >> package/base-files/files/etc/openwrt_release
 echo "=== Step 5 completed ==="
 
+# ============ 6. 修复登录提示符PS1乱码，永久固定 root@主机名:路径# ============
+echo "=== Step 6: Fix login PS1 prompt ==="
+sed -i '/export PS1=/d' package/base-files/files/etc/profile
+echo 'export PS1="\u@\h:\w# "' >> package/base-files/files/etc/profile
+rm -f package/base-files/files/root/.profile
+echo "=== Step 6 completed: PS1 prompt fixed ==="
+
 
 echo ""
 echo "============================================"
