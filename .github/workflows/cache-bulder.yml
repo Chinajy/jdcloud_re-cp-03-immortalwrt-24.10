@@ -140,14 +140,14 @@ jobs:
     - name: 缓存编译依赖
       uses: actions/cache@v4
       with:
-      path: |
-            openwrt/dl
-            openwrt/feeds
-            openwrt/build_dir
-            openwrt/staging_dir
-            key: ${{ env.OPENWRT_NAME }}-${{ env.REPO_BRANCH }}-${{ hashFiles('*.config','diy-part*.sh') }}
-      restore-keys: |
-            ${{ env.OPENWRT_NAME }}-${{ env.REPO_BRANCH }}-
+        path: |
+          openwrt/dl
+          openwrt/feeds
+          openwrt/build_dir
+          openwrt/staging_dir
+        key: ${{ env.OPENWRT_NAME }}-${{ env.REPO_BRANCH }}-${{ hashFiles('*.config','diy-part*.sh') }}
+        restore-keys: |
+          ${{ env.OPENWRT_NAME }}-${{ env.REPO_BRANCH }}-
 
     - name: 下载安装包
       id: package
