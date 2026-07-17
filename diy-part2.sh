@@ -24,21 +24,17 @@ echo "=== Step 1: Downloading OpenClash Meta core for arm64 ==="
 CORE_TARGET_DIR="feeds/luci/applications/luci-app-openclash/root/etc/openclash/core"
 mkdir -p "$CORE_TARGET_DIR" 2>/dev/null
 
-# 国内镜像下载，静默输出，失败不中断流程
+# 国内镜像静默下载
 curl -sL -m 60 --retry 3 https://mirror.ghproxy.com/https://raw.githubusercontent.com/vernesong/OpenClash/core/master/meta/clash-linux-arm64.tar.gz -o /tmp/clash.tar.gz 2>/dev/null
 
-# 判断压缩包存在再解压
-if [ -f "/tmp/clash.tar.gz" ]; then
-    tar zxvf /tmp/clash.tar.gz -C /tmp >/dev/null 2>&1
-    # 匹配/tmp下文件名包含clash的二进制文件
-    BIN_FILE=$(find /tmp -maxdepth 1 -type f -name "*clash*")
-    if [ -n "$BIN_FILE" ]; then
-        chmod +x "$BIN_FILE" >/dev/null 2>&1
-        mv "$BIN_FILE" "$CORE_TARGET_DIR/clash_meta" >/dev/null 2>&1
-    fi
-fi
+# 解压，不做前置判断
+tar zxvf /tmp/clash.tar.gz -C /tmp >/dev/null 2>&1
+# 匹配/tmp下所有带clash的文件，批量移动到内核目录
+find /tmp -maxdepth 1 -type f -name "*clash*" -exec mv {} "$CORE_TARGET_DIR/clash_meta" \; >/dev/null 2>&1
+# 赋予执行权限
+chmod +x "$CORE_TARGET_DIR/clash_meta" 2>/dev/null
 
-# 清理临时文件
+# 清理临时包
 rm -rf /tmp/clash.tar.gz 2>/dev/null
 echo "=== Step 1 completed: OpenClash Meta core ready ==="
 
