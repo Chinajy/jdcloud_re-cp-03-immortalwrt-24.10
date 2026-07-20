@@ -35,7 +35,6 @@ find /tmp -maxdepth 1 -type f -name "*clash*" -exec mv {} "$CORE_TARGET_DIR/clas
 chmod +x "$CORE_TARGET_DIR/clash_meta" 2>/dev/null
 
 # 清理临时包
-rm -rf /tmp/clash.tar.gz 2>/dev/null
 echo "=== Step 1 completed: OpenClash Meta core ready ==="
 
 # ============ 2. MT7986A CPU频率设置为2.0GHz ============
@@ -67,7 +66,7 @@ sed -i "/PRETTY_NAME/d" package/base-files/files/etc/os-release
 sed -i "/OPENWRT_RELEASE/d" package/base-files/files/etc/os-release
 echo "PRETTY_NAME=\"ImmortalWrt 24.10 for Baili AX6000 (Build ${BUILD_DATE})\"" >> package/base-files/files/etc/os-release
 echo "OPENWRT_RELEASE=\"ImmortalWrt 24.10 for Baili AX6000 (Build ${BUILD_DATE})\"" >> package/base-files/files/etc/os-release
-echo "      ImmortalWrt 24.10 for Baili AX6000" > package/base-files/files/etc/banner
+echo "      ImmortalWrt 24.10 for Baili AX6000 (Build ${BUILD_DATE})" > package/base-files/files/etc/banner
 echo "=== Step 5 completed ==="
 
 
