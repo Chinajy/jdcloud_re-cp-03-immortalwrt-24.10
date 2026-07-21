@@ -66,7 +66,12 @@ sed -i "/PRETTY_NAME/d" package/base-files/files/etc/os-release
 sed -i "/OPENWRT_RELEASE/d" package/base-files/files/etc/os-release
 echo "PRETTY_NAME=\"ImmortalWrt 24.10 for Baili AX6000 (Build ${BUILD_DATE})\"" >> package/base-files/files/etc/os-release
 echo "OPENWRT_RELEASE=\"ImmortalWrt 24.10 for Baili AX6000 (Build ${BUILD_DATE})\"" >> package/base-files/files/etc/os-release
-echo "      ImmortalWrt 24.10 for Baili AX6000 (Build ${BUILD_DATE})" > package/base-files/files/etc/banner
+cat > package/base-files/files/etc/banner <<BANNER_EOF
+================================================
+      ImmortalWrt 24.10 for Baili AX6000
+              Build: ${BUILD_DATE}
+================================================
+BANNER_EOF
 echo "=== Step 5 completed ==="
 
 
