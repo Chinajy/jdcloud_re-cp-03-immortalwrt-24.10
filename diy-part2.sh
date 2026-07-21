@@ -73,12 +73,21 @@ echo "=== Step 5 completed ==="
 # ============ 6. 修复登录提示符PS1乱码，永久固定 root@主机名:路径# ============
 echo "=== Step 6: Fix login PS1 prompt ==="
 mkdir -p files/etc
-# 复制原版profile，再替换PS1相关区块
-cp package/base-files/files/etc/profile files/etc/profile
-sed -i '/export PS1=.*/,/esac/d' files/etc/profile
-# 插入三shell自适应PS1代码
-cat >> files/etc/profile <<'PS1_FIX'
+# 复制原版profile，校验源文件存在再操作
+SRC_PROFILE="package/base-files/files/etc/profile"
+if [ ! -f "$SRC_PROFILE" ]; then
+    echo "ERROR: 源文件 $SRC_PROFILE 不存在，跳过PS1修复"
+else
+    cp "$SRC_PROFILE" files/etc/profile
+    # 关键修复：删除破坏PATH的 Windows 占位符代码 export PATH="%PATH%"
+    sed -i '/export PATH="%PATH%"/d' files/etc/profile
+    # 精准匹配原版PS1整段删除，避免误删其他esac
+    sed -i '/export PS1=\047\\u@\\h:\\w\\\$ \047/,/esac/d' files/etc/profile
+    # 插入三shell自适应PS1代码
+    cat >> files/etc/profile <<'PS1_FIX'
 export ENV=/etc/shinit
+# ash路径简写函数，仅定义一次
+short_pwd() { pwd | sed -e "s|^$HOME|~|" ; }
 if [ -n "$BASH_VERSION" ]; then
     export PS1='\u@\h:\w\$ '
     case "$TERM" in
@@ -94,10 +103,10 @@ elif [ -n "$ZSH_VERSION" ]; then
         ;;
     esac
 else
-    short_pwd() { pwd | sed -e "s|^$HOME|~|" ; }
     export PS1="$USER@$HOSTNAME:$(short_pwd)# "
 fi
 PS1_FIX
+fi
 echo "=== Step 6 completed: PS1 prompt fixed ==="
 
 
