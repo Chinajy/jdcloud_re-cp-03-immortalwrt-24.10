@@ -72,9 +72,32 @@ echo "=== Step 5 completed ==="
 
 # ============ 6. 修复登录提示符PS1乱码，永久固定 root@主机名:路径# ============
 echo "=== Step 6: Fix login PS1 prompt ==="
-sed -i '/export PS1=/d' package/base-files/files/etc/profile
-echo 'export PS1="\u@\h:\w# "' >> package/base-files/files/etc/profile
-rm -f package/base-files/files/root/.profile
+mkdir -p files/etc
+# 复制原版profile，再替换PS1相关区块
+cp package/base-files/files/etc/profile files/etc/profile
+sed -i '/export PS1=.*/,/esac/d' files/etc/profile
+# 插入三shell自适应PS1代码
+cat >> files/etc/profile <<'PS1_FIX'
+export ENV=/etc/shinit
+if [ -n "$BASH_VERSION" ]; then
+    export PS1='\u@\h:\w\$ '
+    case "$TERM" in
+        xterm*|rxvt*)
+            export PS1='\[\e]0;\u@\h: \w\a\]'"$PS1"
+        ;;
+    esac
+elif [ -n "$ZSH_VERSION" ]; then
+    export PS1='%n@%m:%~# '
+    case "$TERM" in
+        xterm*|rxvt*)
+            export PS1='%{\e]0;%n@%m: %~\a%}'"$PS1"
+        ;;
+    esac
+else
+    short_pwd() { pwd | sed -e "s|^$HOME|~|" ; }
+    export PS1="$USER@$HOSTNAME:$(short_pwd)# "
+fi
+PS1_FIX
 echo "=== Step 6 completed: PS1 prompt fixed ==="
 
 
