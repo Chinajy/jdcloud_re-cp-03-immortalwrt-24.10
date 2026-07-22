@@ -43,8 +43,8 @@ echo "=== Step 2 completed: CPU frequency set to 2.0GHz ==="
 # ============ 3. 修改默认WiFi名称（SSID） ============
 echo "=== Step 3: Configuring default WiFi settings ==="
 # 2.4G: Baili-2.4G, 5G: Baili-5G
-sed -i 's/ImmortalWrt/Baili-2.4G/g' package/mtk/applications/mtwifi-cfg/files/mtwifi.sh 2>/dev/null || true
-sed -i 's/ImmortalWrt_5G/Baili-5G/g' package/mtk/applications/mtwifi-cfg/files/mtwifi.sh 2>/dev/null || true
+sed -i 's/ImmortalWrt-2.4G/Chinajy-2.4G/g' package/mtk/applications/mtwifi-cfg/files/mtwifi.sh 2>/dev/null || true
+sed -i 's/ImmortalWrt-5G/Chinajy-5G/g' package/mtk/applications/mtwifi-cfg/files/mtwifi.sh 2>/dev/null || true
 echo "=== Step 3 completed: WiFi SSID configured ==="
 
 # ============ 4. 禁用冲突的USB挂载包 ============
