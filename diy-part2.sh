@@ -24,18 +24,16 @@ echo "=== Step 1: Downloading OpenClash Meta core for arm64 ==="
 CORE_TARGET_DIR="feeds/luci/applications/luci-app-openclash/root/etc/openclash/core"
 mkdir -p "$CORE_TARGET_DIR" 2>/dev/null
 
-# 国内镜像静默下载
-curl -sL -m 60 --retry 3 https://mirror.ghproxy.com/https://raw.githubusercontent.com/vernesong/OpenClash/core/master/meta/clash-linux-arm64.tar.gz -o /tmp/clash.tar.gz 2>/dev/null
+# mihomo官方arm64内核，ghproxy加速，适配面板要求的clash_meta文件名
+curl -sL -m 60 --retry 3 https://mirror.ghproxy.com/https://github.com/MetaCubeX/mihomo/releases/latest/download/mihomo-linux-arm64 -o /tmp/clash_meta 2>/dev/null
 
-# 解压，不做前置判断
-tar zxvf /tmp/clash.tar.gz -C /tmp >/dev/null 2>&1
-# 匹配/tmp下所有带clash的文件，批量移动到内核目录
-find /tmp -maxdepth 1 -type f -name "*clash*" -exec mv {} "$CORE_TARGET_DIR/clash_meta" \; >/dev/null 2>&1
-# 赋予执行权限
-chmod +x "$CORE_TARGET_DIR/clash_meta" 2>/dev/null
+if [ -f "/tmp/clash_meta" ]; then
+    mv /tmp/clash_meta "$CORE_TARGET_DIR/clash_meta" >/dev/null 2>&1
+    chmod +x "$CORE_TARGET_DIR/clash_meta" 2>/dev/null
+fi
 
-# 清理临时包
 echo "=== Step 1 completed: OpenClash Meta core ready ==="
+
 
 # ============ 2. MT7986A CPU频率设置为2.0GHz ============
 echo "=== Step 2: Setting CPU frequency to 2.0GHz ==="
@@ -66,12 +64,6 @@ sed -i "/PRETTY_NAME/d" package/base-files/files/etc/os-release
 sed -i "/OPENWRT_RELEASE/d" package/base-files/files/etc/os-release
 echo "PRETTY_NAME=\"ImmortalWrt 24.10 for Baili AX6000 (Build ${BUILD_DATE})\"" >> package/base-files/files/etc/os-release
 echo "OPENWRT_RELEASE=\"ImmortalWrt 24.10 for Baili AX6000 (Build ${BUILD_DATE})\"" >> package/base-files/files/etc/os-release
-cat > package/base-files/files/etc/banner <<BANNER_EOF
-================================================
-      ImmortalWrt 24.10 for Baili AX6000
-              Build: ${BUILD_DATE}
-================================================
-BANNER_EOF
 echo "=== Step 5 completed ==="
 
 
