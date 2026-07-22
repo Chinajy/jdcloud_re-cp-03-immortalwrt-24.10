@@ -19,22 +19,6 @@
 # Modify hostname
 #sed -i 's/OpenWrt/P3TERX-Router/g' package/base-files/files/bin/config_generate
 
-# ============ 1. OpenClash Meta内核下载 ============
-echo "=== Step 1: Downloading OpenClash Meta core for arm64 ==="
-CORE_TARGET_DIR="feeds/luci/applications/luci-app-openclash/root/etc/openclash/core"
-mkdir -p "$CORE_TARGET_DIR" 2>/dev/null
-
-# mihomo官方arm64内核，ghproxy加速，适配面板要求的clash_meta文件名
-curl -sL -m 60 --retry 3 https://mirror.ghproxy.com/https://github.com/MetaCubeX/mihomo/releases/latest/download/mihomo-linux-arm64 -o /tmp/clash_meta 2>/dev/null
-
-if [ -f "/tmp/clash_meta" ]; then
-    mv /tmp/clash_meta "$CORE_TARGET_DIR/clash_meta" >/dev/null 2>&1
-    chmod +x "$CORE_TARGET_DIR/clash_meta" 2>/dev/null
-fi
-
-echo "=== Step 1 completed: OpenClash Meta core ready ==="
-
-
 # ============ 2. MT7986A CPU频率设置为2.0GHz ============
 echo "=== Step 2: Setting CPU frequency to 2.0GHz ==="
 sed -i '/"mediatek"\/\*|"mvebu"\/\*/{n; s/.*/\tcpu_freq="2.0GHz" ;;/}' package/emortal/autocore/files/generic/cpuinfo
